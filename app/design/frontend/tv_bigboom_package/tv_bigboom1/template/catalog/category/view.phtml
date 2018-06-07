@@ -1,0 +1,152 @@
+<?php
+
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+?>
+<?php
+/**
+ * Category view template
+ *
+ * @see Mage_Catalog_Block_Category_View
+ */
+?>
+<?php
+$_backImgPath = Mage::getBaseUrl('media') . '/catalog/category/';
+$_helper = $this->helper('catalog/output');
+$_category = $this->getCurrentCategory();
+$_imgHtml = '';
+if ($_imgUrl = $_category->getImageUrl()) {
+    $_imgHtml = '<p class="category-image"><img src="' . $_imgUrl . '" alt="' . $this->escapeHtml($_category->getName()) . '" title="' . $this->escapeHtml($_category->getName()) . '" /></p>';
+    $_imgHtml = $_helper->categoryAttribute($_category, $_imgHtml, 'image');
+}
+?>
+
+<?php if ($_imgUrl): ?>
+    <?php //echo $_imgHtml ?>
+<?php endif; ?>
+<div class="page-title category-title">
+    <?php if ($this->IsRssCatalogEnable() && $this->IsTopCategory()): ?>
+        <a href="<?php echo $this->getRssLink() ?>"
+           class="link-rss"><?php echo $this->__('Subscribe to RSS Feed') ?></a>
+    <?php endif; ?>
+    <h1><?php echo $_helper->categoryAttribute($_category, $_category->getName(), 'name') ?></h1>
+</div>
+
+<?php echo $this->getMessagesBlock()->getGroupedHtml() ?>
+
+
+<?php if ($_description = $this->getCurrentCategory()->getDescription()): ?>
+    <div class="category-description std">
+        <?php echo $_helper->categoryAttribute($_category, $_description, 'description') ?>
+    </div>
+<?php endif; ?>
+<?php
+$imgWidth = 295;
+$columnCount = 5;
+$currentCategory = Mage::getSingleton('catalog/layer')->getCurrentCategory();
+$currentCatId = Mage::registry('current_category')->getId();
+$currentParentId = Mage::registry('current_category')->getParentId();
+$categories = $currentCategory->getCollection()
+    ->addAttributeToSelect(array('name', 'image'))
+    ->addAttributeToFilter('is_active', 1)
+    ->addIdFilter($currentCategory->getChildren())
+    ->addAttributeToSort('position');
+    $_category = Mage::getModel( 'catalog/category' )->load( Mage::registry( 'current_category' )->getParentId());
+	//print_r(Mage::registry('current_category')->getEntityId());exit;
+?>
+<?php if($currentCategory->getChildren()):?>
+    <div class="category-products" id="category-model">
+        <?php $_collectionSize = $categories->count() ?>
+        <?php $_columnCount = 5 ?>
+        <?php $i = 0; foreach ($categories as $category):?>
+        <?php if ($i++%$_columnCount==0): ?>
+        <ul class="category-products-grid products-grid clearfix">
+        <?php endif; ?>
+            <li class="item col-md-3 col-sm-6 col-sms-6 col-smb-12  <?php if(($i-1)%$_columnCount==0): ?> first<?php elseif($i%$_columnCount==0): ?> last<?php endif; ?>">
+                <div class="item-inner">
+                    <div class="box-images">
+                        <a href="<?php echo $category->getUrl() ?>" title="<?php echo $category->getName() ?>" class="product-image">
+                            <!--img-face-back only show at the phone model-->
+                            <?php
+                            $_category = Mage::getModel( 'catalog/category' )->load( Mage::registry( 'current_category' )->getParentId());
+                            //print_r($_category);exit;
+                            //echo $_category->getId().'123';
+                             $leveCategory = Mage::registry('current_category')->getEntityId();
+                            ?>
+                            <?php if($_category->getId()=='2502' || $leveCategory =='2502' || ($_category->getParentId()=='2502')): ?> <!--server id 2502 local id 22-->
+                                <img class="img-face-back" src="<?php echo $_backImgPath . 'repair_back.png'?>" />
+                            <?php endif;?>
+                            <img class="img-face" id="product-collection-image-<?php echo $category->getId(); ?>" src="<?php echo $category->getImageUrl() ?>" alt="<?php echo $category->getName() ?>"/>
+                        </a>
+                    </div>
+                    <h3 class="product-name">
+                        <a href="<?php echo $category->getUrl() ?>" title="<?php echo $category->getName() ?>"><?php echo $category->getName() ?></a>
+                    </h3>
+                </div>
+            </li>
+        <?php if ($i%$_columnCount==0 || $i==$_collectionSize): ?>
+        </ul>
+        <?php endif ?>
+        <?php endforeach; ?>
+    </div>
+    <script type="text/javascript">
+        window.onload = function () {
+
+            jQuery(document).ready(function ($) {
+                $("#category-model .product-image").each(function(){
+                    var $this = $(this);
+                    var left = $this.width() > 120 ? ($this.width() - 120) / 2 : 0;
+                    var top = $this.height() > 120 ? ($this.height() - 120 ) / 2 : 0;
+                    $this.find(".img-face-back").css({"left" : left + "px","top" : top + "px"});
+                });
+                $("#category-model li").mouseover(function () {
+                    var $this = $(this).find(".box-images");
+                    if(window.console){
+                        //console.log("width: " + $this.width() + "px; height: " + $this.height() +"px;")
+                    }
+                    var left = $this.width() > 120 ? ($this.width() - 120) / 2 : 0;
+                    var top = $this.height() > 120 ? ($this.height() - 120 ) / 2 : 0;
+                    $this.find(".img-face-back").css({"left" : left + "px","top" : top + "px"});
+                });
+            });
+
+        };
+    </script>
+<?php else: ?>
+
+    <?php if ($this->isContentMode()): ?>
+        <?php echo $this->getCmsBlockHtml() ?>
+
+    <?php elseif ($this->isMixedMode()): ?>
+        <?php echo $this->getCmsBlockHtml() ?>
+        <?php echo $this->getProductListHtml() ?>
+
+    <?php else: ?>
+        <?php echo $this->getProductListHtml() ?>
+    <?php endif; ?>
+
+<?php endif; ?>
+
+

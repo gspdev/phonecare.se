@@ -1,0 +1,85 @@
+.wrapper_inboxCart {
+    position: fixed;
+    width: 320px;
+    height: auto;
+    background: #fff;
+    z-index: 999999;
+    border: 1px solid #ddd;
+    opacity: 1;
+    top: 50%;
+    margin-top: -100px;
+    left: 50%;
+    margin-left: -120px;
+    display: block;
+    padding: 0;
+}
+#product_info_box { /* display: none; */}
+
+.wrapper_inboxCart p.info {
+    color: #262626;
+    font-size: 13px;
+    background: #fff;
+    border: 1px solid #efefef;
+    padding: 12px 10px;
+    text-align: center;
+    margin: 0;
+    box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.51);
+    }
+
+
+/* top cart  */
+
+.header-cart-mini .top-cart-content {
+    width:500px;
+    position: absolute;
+    top: 58px;
+    right: -60px;
+    border: 1px solid #ddd;
+    border-top: 3px solid #e74c3c;
+    background:#fff;
+    padding: 15px;
+    text-align: left;
+    display: none;
+}
+.header-cart-mini:hover .top-cart-content {
+    display: block;
+}
+
+.top-subtotal {
+    margin: 15px 0 0;
+    font-size: 12px;
+    text-transform: uppercase;
+    font-weight: bold;
+    text-align: right;
+    border-top: 1px solid #eee;
+    clear: both;
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+}
+.top-cart-content li.item{ float:left; width:100%; margin:0 0 10px;position: relative;}
+.top-cart-content .product-details { position:relative; }
+.top-cart-content .btn-remove{ position:absolute; left: 0; top: 0;}
+.top-cart-content .btn-edit{ position:absolute; right: 15px; top:4px;display: none; }
+
+.top-cart-content .actions {
+    padding: 0;
+    float: right;
+    margin:10px 0 0;
+	height:40px\9;
+}
+.top-cart-contain .product-details .price {width: auto;font-size: 15px;font-weight: bold;}
+.top-subtotal span{ font-weight: bold; font-size: 13px}
+.mini-products-list .product-details .product-name,
+.mini-products-list .product-details .price_box,
+.mini-products-list .product-details .sku{
+    display: inline-block;
+    float:left;
+}
+.mini-products-list .product-details .product-name{
+    width: 50%;
+    padding-right: 9%;
+}
+
+.mini-products-list .product-details .sku{width:20%;font-size: 10px;}
+.mini-products-list .product-details .price_box{float:right;width: 30%;text-align: right;}
+.mini-products-list .product-details .price_box .price{color:#fc6908;}

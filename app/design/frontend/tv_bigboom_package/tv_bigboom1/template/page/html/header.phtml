@@ -1,0 +1,186 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+/**
+ * @var Mage_Page_Block_Html_Header $this
+ */
+?>
+<?php
+	$session = Mage::getSingleton('customer/session');
+	$status = $session->isLoggedIn();
+	$customer_data = Mage::getModel('customer/customer')->load($session->id);
+	//print_r($customer_data->getData());exit;
+?>
+<header class="header-wrapper">
+    <div id="header-special-offer">
+        <div class="container">
+            <div class="promotion">
+                <span class="header-special-offer-close"><i class="fa fa-times"></i></span>
+                <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('promotion')->toHtml() ?>
+            </div>
+        </div>
+    </div>
+    <div class="header-quick-access">
+        <div class="container">
+            <div class="row">
+                <div class="col-xs-5 col-sm-5 col-md-6 col-lg-6 logo-box">
+                    <?php if ($this->getIsHomePage()):?>
+                        <h1 class="logo"><strong><?php echo $this->getLogoAlt() ?></strong><a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a></h1>
+                    <?php else:?>
+                        <a href="<?php echo $this->getUrl('') ?>" title="<?php echo $this->getLogoAlt() ?>" class="logo"><strong><?php echo $this->getLogoAlt() ?></strong><img src="<?php echo $this->getLogoSrc() ?>" alt="<?php echo $this->getLogoAlt() ?>" /></a>
+                    <?php endif?>
+                </div>
+                <div class="col-xs-7 col-sm-7 col-md-6 col-lg-6">
+                    <div class="quick-access">
+                        <div class="header-left text-right">
+                            <ul class="user">
+                                <?php if (empty($session->getId())):?>
+                                    <li><a href="<?php echo $this->getUrl('customer/account/login')?>" title="Sign in" class="signin">Logga in</a></li>
+                                    <li><a class="head-Join register" href="<?php echo $this->getUrl("customer/account/create")?>" title="Join">Registrera</a></li>
+                                <?php else:?>
+                                    <li><span>Welcome,</span><a title="My Account" href="<?php echo $this->getUrl('customer/account/')?>"><span style="margin-right: 10px;"><?php echo $customer_data->getFirstname()?></span></a></li>
+                                    <li><a href="<?php echo $this->getUrl('customer/account/logout')?>">Logout</a></li>
+								<?php endif;?>
+                                <li class="hidden-xs"><a href="<?php echo $this->getUrl("contact-us")?>">Kontakta oss</a></li>
+                            </ul>
+                            <ul class="social">
+                                <li><a class="blog" href="<?php echo $this->getUrl('social/blog')?>">Blogg</a></li>
+                                <!--<li><a class="social_icon facebook" href="<?php echo $this->getUrl('social/facebook')?>"></a></li>-->
+                                <li><a class="icon-facebook fa fa-facebook" target="_blank" href="https://www.facebook.com/Phonecare.se/"></a></li>
+                                <li><a class="icon-instagram fa fa-instagram" target="_blank" href="<?php echo $this->getUrl('social/instagram')?>"></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+	<div class="nav-container-box">
+		<div class="container">
+            <div class="row visible-xs small-screen">
+                <ul class="menu_list container clearfix">
+                    <li><a href="<?php echo $this->getUrl("")."priser.html"?>">Priser</a></li>
+                    <li><a href="<?php echo $this->getUrl("repairdevice")?>">Reparationer</a></li>
+                    <li class="visible-xs hidden-sm"><a href="<?php echo $this->getUrl("contact-us")?>">Kontakta oss</a></li>
+                </ul>
+            </div>
+            <div class="row">
+                <div class="col-xs-4 col-sm-2 col-md-6 col-lg-6 nav-inner">
+                    <!--vmegamenu-menu-->
+                    <div class="vmegamenu-menu">
+                        <div class="block-position">
+                            <div class="position position1">
+                                <?php $block =$this->getLayout()->createBlock('megamenu/megamenu')
+                                    ->setTemplate('themevast/megamenu/vmegamenu.phtml');
+                                echo $block->toHtml();
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    <?php echo $this->getChildHtml('topMenu') ?>
+                </div>
+                <div class="col-xs-4 search-trigger visible-xs hidden-md">
+                    <div class="mobile-img"></div>
+                </div>
+                <div class="col-xs-12 col-sm-7 col-md-4 col-lg-4 search-box">
+                    <?php echo $this->getChildHtml('topSearch') ?>
+                </div>
+                <div class="col-xs-4 col-sm-3 col-md-2 col-lg-2 f-right search-right-box">
+                    <div class="search-right clear_fix">
+                        <div class="head-Cart f-right">
+                            <a id="cart_bg" href="<?php echo Mage::helper('checkout/cart')->getCartUrl(); ?>"></a>
+                            <p id="cart_bg_mobile"></p>
+                            <div class="header-cart-mini">
+                                <div class="topcart-mini-container">
+                                    <?php echo $this->getChildHtml('top_cart_mini') ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		</div>
+	</div>
+    <?php echo $this->getChildHtml('topContainer'); ?>
+</header>
+<script type="text/javascript">
+    jQuery(document).ready(function($){
+        //seach-trigger
+        $(".search-trigger").click(function () {
+            if($("#navbar-inner").hasClass("navbar-active")){   //menu active
+                $("#navbar-inner .btn-navbar").click(); //set menu hide
+            }
+            if($("#mini_cart_block .top-cart-content").hasClass("cart-active")){ //cart active
+                $("#mini_cart_block .top-cart-content").removeClass("cart-active");//set cart hide
+            }
+            $(".nav-container-box .search-box").slideToggle(function () {
+                checkMenu();
+            });
+        });
+        //click menu , hide seach-box and mini-cart
+        $("#navbar-inner .btn-navbar").click(function () {
+            $(".nav-container-box .search-box").hide();
+            $("#mini_cart_block .top-cart-content").removeClass("cart-active");
+            checkMenu();
+        });
+        //click cart
+        $("#cart_bg_mobile").click(function(){
+            if($("#navbar-inner").hasClass("navbar-active")){   //menu active
+                $("#navbar-inner .btn-navbar").click(); //set menu hide
+            }
+            $(".nav-container-box .search-box").hide();
+            var $cart_content = $("#mini_cart_block .top-cart-content");
+            if(!$cart_content.hasClass("cart-active")){
+                $cart_content.addClass("cart-active");
+            }else{
+                $cart_content.removeClass("cart-active");
+            }
+            checkMenu();
+        });
+        //set css for click
+        function checkMenu() {
+            //hide all style
+            $(".nav-container-box .nav-inner, .search-trigger,.search-right-box").removeClass("active");
+            if($("#navbar-inner").hasClass("navbar-active")){   //menu active
+                $(".nav-container-box .nav-inner").addClass("active");
+            }
+            if($(".nav-container-box .search-box").css('display')=='block'){
+                $(".search-trigger").addClass("active");
+            }else{
+                $(".search-trigger").removeClass("active");
+            }
+            if($("#mini_cart_block .top-cart-content").hasClass("cart-active")){ //cart active
+                $(".search-right-box").addClass("active");
+            }
+        }
+        /*$(document).click(function (e) {
+            if ($(e.target).attr('id')!=='cart_bg_mobile'||!$(e.target).hasClass("search-trigger")||!$(e.target).hasClass("btn-navbar")) {
+
+            }
+        });*/
+
+    });
+</script>
+<div id="headerHeight" style="opacity: 0;z-index: 0;background: none;"></div>

@@ -1,0 +1,322 @@
+<?php
+if (!$this->getConfig('enabled')) return;
+//$_productCollection=$this->getProductCollection();
+
+$_helper = $this->helper('catalog/output');
+$helpLabels = $this->helper('themevast/labels');
+$_featureImgUrl = Mage::getBaseUrl();
+?>
+<div class="container" id="info-strip">
+    <div class="innerContainer">
+        <ul class="clear_fix">
+            <li><a href="javascript:void(0);" onclick="renderPolicy('1')"> <img
+                            src="<?php echo $_featureImgUrl . '\skin\frontend\tv_bigboom_package\tv_bigboom1\images\shipping.png' ?>"
+                            alt="shipping" width="64">
+                    <h3>Fri frakt</h3> <span>Skickas nästa arbetsdag</span> </a></li>
+            <li><a href="javascript:void(0);" onclick="renderPolicy('2')"> <img
+                            src="<?php echo $_featureImgUrl . '\skin\frontend\tv_bigboom_package\tv_bigboom1\images\fardigt.png' ?>"
+                            alt="fardigt" width="45">
+                    <h3>Färdigt på15 min</h3> <span>påde flesta reparationer</span> </a></li>
+            <li><a href="javascript:void(0);" onclick="renderPolicy('3')"> <img
+                            src="<?php echo $_featureImgUrl . '\skin\frontend\tv_bigboom_package\tv_bigboom1\images\spara.png' ?>"
+                            alt="spara" width="34">
+                    <h3>Spara 50% - 75%</h3> <span>påflera reparationer påsamma enhet</span> </a></li>
+        </ul>
+    </div>
+</div>
+<!-- edit by Jerry -->
+<div class="feature modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog" style="margin:120px auto 0 auto;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+
+                <h4 class="modal-title" id="myModalLabel">
+                    <!--need output-->
+                    <p>Fri Frakt inom Sverige</p>
+                    <p>Mobil Reparationer</p>
+                    <p>Spara 50% - 75% På Flera Reparationer!</p>
+                </h4>
+
+            </div>
+            <!--modal-body-->
+            <div class="modal-body">
+                <!--need output-->
+                <div class="content">
+
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('fri_frakt')->toHtml() ?>
+
+                </div>
+                <div class="content">
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('fardight_a15_min')->toHtml() ?>
+                </div>
+                <div class="content">
+                    <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('spara_50_75')->toHtml() ?>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<div class="underInfo"></div>
+<div class="featuredproduct">
+    <?php
+    /*echo $this->getConfig('title') ? '<div class="bx-title featured-title clearfix">
+        <h2 class="f-left" style="display: inline-block;">' .$this->getConfig('title'). '</h2>
+        <!--add by jerry-->
+        <ul class="f-right">
+            <li class="active">Best Selling</li>
+            <li>New Arrival</li>
+            <li>Featured Product</li>
+        </ul>
+    </div>' : '';
+    */
+    ?>
+    <div class="bx-title featured-title">
+        <!--add by jerry-->
+        <ul class="feature_title clearfix">
+            <li class="active"><a href="<?php echo Mage::getBaseUrl() . "promotion/recommend.html" ?>">Populart</a></li>
+            <li><a href="<?php echo Mage::getBaseUrl() . "promotion/featured.html" ?>">Nytt</a></li>
+            <li><a href="<?php echo Mage::getBaseUrl() . "promotion/deal.html" ?>">Rea</a></li>
+        </ul>
+    </div>
+    <div class="featured_out">
+        <?php
+        // getConfig
+        $widthImage = $this->getConfig('widthImage') ? $this->getConfig('widthImage') : 135;
+        $heightImage = $this->getConfig('heightImage') ? $this->getConfig('heightImage') : 135;
+        $price = $this->getConfig('price');
+        $cart = $this->getConfig('cart');
+        $compare = $this->getConfig('compare');
+        $wishlist = $this->getConfig('wishlist');
+        $review = $this->getConfig('review');
+        $slide = $this->getConfig('slide');
+        $rows = $this->getConfig('rows');
+        $class = ($slide && $rows > 1) ? '.slide-multirows' : '.products-grid';
+        ?>
+        <?php if ($slide && $rows > 1): ?>
+        <div class="slide-multirows">
+            <?php endif ?>
+            <?php
+            //edit by mivec
+            $_categoresId = array(289, 151, 152);
+
+            $_status = "";
+            $_count = 1;
+            foreach ($_categoresId as $_categoryId) :
+                $_category = Mage::getModel("catalog/category")->load($_categoryId);
+
+                $_productCollection = Mage::getModel("catalog/product")
+                    ->getCollection()
+                    ->addCategoryFilter($_category)
+                    ->setPageSize(8)
+                    ->setOrder("entity_id", "DESC");
+                //echo $_count . "</p>";
+                if ($_count == 1) {
+                    $_status = "active";
+                } else {
+                    $_status = "";
+                }
+                ?>
+                <div id="category-<?php echo $_categoryId; ?>" class="featuredBox <?php echo $_status ?>">
+                    <?php $_collectionSize = $_productCollection->count() ?>
+                    <?php $_columnCount = $this->getColumnCount(); ?>
+                    <?php $j = 0;
+                    $time = $this->getConfig('playDelay'); ?>
+                    <?php $i = 0;
+                    foreach ($_productCollection as $_product): ?>
+                        <?php $t = $j * $time;
+                        $t .= 'ms';
+                        $j++; ?>
+                        <?php if ($i++ % $_columnCount == 0): ?>
+                            <ul class="products-grid">
+                        <?php endif ?>
+                        <li class="item<?php if (($i - 1) % $_columnCount == 0): ?> first<?php elseif ($i % $_columnCount == 0): ?> last<?php endif; ?> item-animate">
+                            <div class="item-inner">
+                                <?php // Product Image ?>
+                                <div class="box-images">
+                                    <a href="<?php echo $_product->getProductUrl() ?>"
+                                       title="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"
+                                       class="product-image">
+                                        <?php $imagehv = $_product->load('media_gallery')->getMediaGalleryImages()->getItemByColumnValue('position', '2');
+                                        if ($imagehv) :
+                                            $imagehv = $imagehv->getFile();
+                                            ?>
+                                            <img class="img-face-back"
+                                                 src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image', $imagehv)->resize($widthImage, $heightImage) ?>"
+                                                 alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"/>
+                                        <?php endif ?>
+                                        <img class="img-face"
+                                             src="<?php echo $this->helper('catalog/image')->init($_product, 'small_image')->resize($widthImage, $heightImage); ?>"
+                                             alt="<?php echo $this->stripTags($this->getImageLabel($_product, 'small_image'), null, true) ?>"/>
+                                    </a>
+                                </div>
+                                <div class="product-shop">
+                                    <?php $_productNameStripped = $this->stripTags($_product->getName(), null, true); ?>
+                                    <h2 class="product-name"><a href="<?php echo $_product->getProductUrl() ?>"
+                                                                title="<?php echo $_productNameStripped; ?>"><?php echo $_helper->productAttribute($_product, $_product->getName(), 'name'); ?></a>
+                                    </h2>
+                                    <?php if ($review): ?>
+                                        <?php echo $this->getReviewsSummaryHtml($_product) ?>
+                                    <?php endif; ?>
+                                    <?php if ($price): ?>
+                                        <?php echo $this->getPriceHtml($_product, true) ?>
+                                    <?php endif; ?>
+                                    <div class="actions">
+                                        <div class="stock_box">
+                                            <span class="text">Lager</span>
+                                            <span class="quality"
+                                                  data-quality="
+                                              <?php $stock = Mage::getModel('cataloginventory/stock_item')->loadByProduct($_product);
+                                                                  echo $stock->getQty(); ?>">
+                                            <em class="range"></em>
+                                        </span>
+                                        </div>
+                                        <?php if ($cart): ?>
+                                            <?php if ($_product->isSaleable()): ?>
+                                                <button type="button"
+                                                        title="<?php echo $this->__('Lägg i varukorgen') ?>"
+                                                        class="button btn-cart"
+                                                        onclick="setLocation('<?php echo $this->getAddToCartUrl($_product) ?>')">
+                                                    <span><span><?php echo $this->__('Köp') ?></span></span></button>
+                                            <?php else: ?>
+                                                <p class="availability out-of-stock">
+                                                    <span><?php echo $this->__('Out of stock') ?></span></p>
+                                            <?php endif; ?>
+                                        <?php endif; ?>
+                                    </div>
+                                </div>
+                                <?php echo $helpLabels->getLabels($_product); //Product labels ?>
+                            </div>
+                        </li>
+                        <?php if ($i % $_columnCount == 0 || $i == $_collectionSize): ?>
+                            </ul>
+                        <?php endif ?>
+                    <?php endforeach ?>
+                </div>
+                <?php $_count++;endforeach; ?>
+
+            <?php if ($slide && $rows > 1): ?>
+        </div>
+    </div>
+<?php endif ?>
+    <?php $slide = 0;
+    if ($slide) : ?>
+        <script type="text/javascript">
+            jQuery(document).ready(function ($) {
+                (function (selector) {
+                    var $content = $(selector);
+                    var $slider = $('<?php echo $class ?>', $content);
+                    var slider = $slider.bxSlider({
+                        <?php echo $this->setBxslider() ?>
+                        //infiniteLoop: false,
+                        moveSlides: 1,
+                        //slideMargin: 10,
+                        autoHover: true, // stop while hover <=> slider.stopAuto(); + slider.startAuto();
+                    })
+                })(".featuredproduct");
+            });
+        </script>
+    <?php endif ?>
+    <script type="text/javascript">
+        //new add by jerry at 2017/09/05 18:13
+        ;jQuery(document).ready(function ($) {
+            $(".featuredproduct .feature_title>li").mouseover(function () {
+                if (!$(this).hasClass("active")) {
+                    $(this).addClass("active").siblings().removeClass("active");
+                    var tmpIndex = $(this).index();
+                    $(".featuredproduct .featuredBox").eq(tmpIndex).addClass("active").siblings().removeClass("active");
+                } else {
+                    return false;
+                }
+            });
+            renderPolicy = function (sort) {
+                var sort = sort;
+                $("#myModal.feature #myModalLabel p").eq(sort - 1).addClass("active").siblings().removeClass("active");
+                $("#myModal.feature .modal-body .content").eq(sort - 1).addClass("active").siblings().removeClass("active");
+                $("#myModal.feature").modal({show: true, keyboard: true});
+            }
+        });
+    </script>
+</div>
+<?php
+		$reviews = Mage::getModel('review/review')->getResourceCollection();
+
+		$reviews->addStoreFilter(Mage::app()->getStore()->getId())
+
+		  ->addStatusFilter( Mage_Review_Model_Review::STATUS_APPROVED )
+
+		  ->setDateOrder()
+
+		  ->addRateVotes()
+
+		  ->load();
+
+	?>
+<?php if($reviews->getData()): ?>	
+<div class="review_block">
+    <div class="bx-title">
+        <h2>Customer Reviews</h2>
+    </div>
+							
+    <div class="review_box">
+        <ul class="review_list clearfix">
+		<?php foreach ($reviews as $_vote): ?>
+            <li>
+                <div class="review_content">
+                    <!--<div class="ratings">
+                        <div class="rating-box">
+                            <div class="rating" style="width:100%"></div>
+                        </div>
+                    </div>-->
+					<?php
+						//$_product = $_item->getProduct(); //get the product in cart
+						$storeId = Mage::app()->getStore()->getId();
+						$summaryData = Mage::getModel('review/review_summary')
+											->setStoreId($storeId)
+											->load($_vote->getEntityPkValue());
+						 
+						if ($summaryData['rating_summary']):?>
+							<div class="ratings">
+								<div class="rating-box">
+									<div class="rating" style="width:<?php echo $summaryData['rating_summary']; ?>%"></div>
+								</div>
+							</div>
+				<?php endif; ?>
+                </div>
+                <div class="testimonial-text">
+                    <p class="p1">
+                        <span class="s1"><?php echo $this->escapeHtml($_vote->getDetail()); ?></span>
+                    </p>
+                </div>
+                <div class="testimonial-cite">
+                   <!--<img src="<?php /*echo $_featureImgUrl . '\skin\frontend\tv_bigboom_package\tv_bigboom1\images\spara.png' */?>" width="70" height="70" alt="<?php /*echo 'Name'*/?>">-->
+                    <div class="cite-text has-cite-image">
+                        <span class="cite-name"><?php echo $this->escapeHtml($_vote->getTitle()) ?></span>
+                        <span class="cite-subtext"><?php echo $this->escapeHtml($_vote->getNickname()) ?></span>
+                    </div>
+                </div>
+            </li>
+			
+		<?php endforeach; ?>
+
+        </ul>
+    </div>
+</div>
+<?php endif;?>
+<script type="text/javascript">
+    jQuery(document).ready(function ($) {
+        (function(selector){
+            var $content = $(selector);
+            var $slider  = $('.review_list', $content);
+            var slider 	 = $slider.bxSlider({
+                auto:true,speed:800,pause:4000,infiniteLoop:true,maxSlides:3,slideWidth:390,slideMargin:0,autoHover:true,moveSlides:1,pager:false,controls:1,
+            });
+
+        })(".review_box");
+    });
+</script>
+<?php ?>

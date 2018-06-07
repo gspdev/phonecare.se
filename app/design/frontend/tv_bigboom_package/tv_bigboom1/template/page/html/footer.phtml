@@ -1,0 +1,214 @@
+<?php
+/**
+ * Magento
+ *
+ * NOTICE OF LICENSE
+ *
+ * This source file is subject to the Academic Free License (AFL 3.0)
+ * that is bundled with this package in the file LICENSE_AFL.txt.
+ * It is also available through the world-wide-web at this URL:
+ * http://opensource.org/licenses/afl-3.0.php
+ * If you did not receive a copy of the license and are unable to
+ * obtain it through the world-wide-web, please send an email
+ * to license@magentocommerce.com so we can send you a copy immediately.
+ *
+ * DISCLAIMER
+ *
+ * Do not edit or add to this file if you wish to upgrade Magento to newer
+ * versions in the future. If you wish to customize Magento for your
+ * needs please refer to http://www.magentocommerce.com for more information.
+ *
+ * @category    design
+ * @package     base_default
+ * @copyright   Copyright (c) 2014 Magento Inc. (http://www.magentocommerce.com)
+ * @license     http://opensource.org/licenses/afl-3.0.php  Academic Free License (AFL 3.0)
+ */
+$_footerImgSrc =Mage::getBaseUrl();
+?>
+<script type="text/javascript">
+    /**
+     * edit by jerry , set the color and width of battery according to quality of the product.
+     * */
+    ;jQuery(document).ready(function($){
+        function ProductList(obj) {
+            this.obj = obj;
+            this.setRangeColor = function () {
+                var $t = $(obj);
+                //console.log($t.length);
+                $t.children(".item").each(function () {
+                    var $th = $(this);
+                    var $em = $th.find('em.range');
+                    var quality = parseInt($th.find(".quality").attr("data-quality"));
+                    if(quality > 100){
+                        quality = 100;
+                    }
+                    if(quality < 0){
+                        quality = 0;
+                    }
+                    setCss($em,quality);
+                });
+                function setCss(obj,quality) {
+                    var bgcolor;
+                    if(0 < quality &&quality < 5){
+                        quality = 5;
+                        bgcolor = 'red';
+                    }else if(5 <= quality && quality <= 30){
+                        bgcolor = 'red';
+                    }else if((30 < quality)&&(quality <= 60)){
+                        bgcolor = 'yellow';
+                    }else if((60 <= quality)&&(quality  <= 100)){
+                        bgcolor = 'green';
+                    }
+                    obj.css({'width':(quality*0.22)+'px','background':bgcolor});
+                    //console.log(quality+'-->'+bgcolor);
+                }
+            };
+        }
+        var pro1 = new ProductList(".products-grid,.products-list");
+        pro1.setRangeColor();
+    });
+</script>
+<?php
+    $infopath = $this->getRequest()->getPathInfo();
+
+    //echo $infopath;exit;
+    if ($infopath == "/"):
+?>
+<div class="container-fluid" style="padding: 0;width: 100%;">
+    <!--why choose-->
+    <div class="choose">
+        <div class="choose-bg-box">
+            <ul class="choose-bg-list">
+                <li class="first"></li>
+                <li class="second"></li>
+                <li class="third"></li>
+            </ul>
+        </div>
+        <script type="text/javascript">
+            jQuery(document).ready(function($){
+                (function(selector){
+                    var $content = $(selector);
+                    var $slider  = $('.choose-bg-list', $content);
+                    var slider 	 = $slider.bxSlider({
+                        auto: 1, speed: 500, controls: 0, pager: 0, maxSlides: 1,infiniteLoop: true,
+                        moveSlides:1,
+                        slideMargin: 10,
+                        autoHover: false, // stop while hover <=> slider.stopAuto(); + slider.startAuto();
+                    })
+
+                })(".choose");
+            });
+        </script>
+        <div class="overlay"></div>
+        <div class="innerContainer container"><h2>Varför välja Phonecare</h2>
+            <div class="chooseSlide">
+                <div class="text showThisText"><h4>Reparationer på 15 min</h4>
+                    <p class="h-text">Vi utför de flesta reparationer på 15 min,medan du väntar. För specifika tider, vänligen kontakta oss.</p>
+                </div>
+                <div class="text"><h4>Låga priser</h4>
+                    <p class="h-text">Vi erbjuder prisvärda till konkurrenskraftiga priser.</p>
+                </div>
+                <div class="text"><h4>1-års garanti</h4>
+                    <p class="h-text">Vi är så säkra på våra reparationer att vi erbjuder 1-års garanti på flera av våra reparationer.</p>
+                </div>
+                <div class="text"><h4>Chip-reparationer</h4>
+                    <p class="h-text">Våra tekniker är kunniga och säkra inom sitt område, och kan i flera fall reparera skador i moderkortet.</p>
+                </div>
+                <div class="text"><h4>Spara upp till 75%</h4>
+                    <p class="h-text">Spara upp till 75% om du behöver reparera flera olika komponenter på en gång.</p>
+                </div>
+                <div class="text"><h4>Sekretess</h4>
+                    <p class="h-text">Vi värnar om din sekretess. Vi lagrar dina uppgifter endast för garantiärenden och dylikt.</p>
+                </div>
+                <div class="text"><h4>Hög standard</h4>
+                    <p class="h-text">Vi håller hög standard på våra originaldelar, och garanterar bra kvalitet.</p>
+                </div>
+                <div class="text"><h4>Proffessionellt utfört</h4>
+                    <p class="h-text">Våra tekniker har en lång erfarenhet inom branschen och kan sköta de flesta reparationer.</p>
+                </div>
+                <div id="why-choose-pager" class="clear_fix">
+                    <a href="javascript:void(0)" target="_self" class="pager pageSelected" data-slide-index="1">
+                        <span class="inner"></span> <em class="icon icon1"></em> <em class="txt">Reparationer på 15 min</em>
+                    </a>
+                    <a href="javascript:void(0)" target="_self" class="pager" data-slide-index="2">
+                        <span class="inner"></span> <em class="icon icon2"></em> <em class="txt">Låga priser</em>
+                    </a>
+                    <a href="javascript:void(0)" target="_self" class="pager" data-slide-index="3">
+                        <span class="inner"></span> <em class="icon icon3"></em> <em class="txt">1-års garanti</em>
+                    </a>
+                    <a href="javascript:void(0)" target="_self" class="pager" data-slide-index="4">
+                        <span class="inner"></span> <em class="icon icon4"></em> <em class="txt">Chip-reparationer</em>
+                    </a>
+                    <a href="javascript:void(0)" target="_self" class="pager" data-slide-index="5">
+                        <span class="inner"></span> <em class="icon icon5"></em> <em class="txt">Spara upp till 75%</em>
+                    </a>
+                    <a href="javascript:void(0)" target="_self" class="pager" data-slide-index="6">
+                        <span class="inner"></span> <em class="icon icon6"></em> <em class="txt">Sekretess</em>
+                    </a>
+                    <a href="javascript:void(0)" target="_self" class="pager" data-slide-index="7">
+                        <span class="inner"></span> <em class="icon icon7"></em> <em class="txt">Hög standard</em>
+                    </a> <a href="javascript:void(0)" target="_self" class="pager" data-slide-index="8">
+                        <span class="inner"></span> <em class="icon icon8"></em> <em class="txt">Proffessionellt utfört</em>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        /*.pager selected*/
+        jQuery("#why-choose-pager .pager").mouseover(function () {
+            var tmpIndex = jQuery(this).index();
+            var $current_text = jQuery(".chooseSlide .text").eq(tmpIndex);
+            jQuery(this).addClass("pageSelected").siblings().removeClass("pageSelected");
+            $current_text.addClass("showThisText").siblings().removeClass("showThisText");
+        });
+    </script>
+</div>
+
+<?php endif;?>
+
+<footer class="footer-wrapper">
+    <div class="container-fluid" style="padding: 0;margin: 0;">
+        <div class="footer-inner">
+            <div class="footer-information">
+                <div class="container">
+                    <div class="row">
+                        <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('footer_info')->toHtml() ?>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-container">
+                    <div class="footer">
+                        <div class="container">
+                        <div class="row">
+                            <div class="col-xs-9 col-sm-6">
+                                <?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('footer_social')->toHtml() ?>
+                            </div>
+							<div class="col-xs-3 col-sm-6">
+								<div class="transport">
+									<img src="<?php echo  $_footerImgSrc . ('skin/frontend/tv_bigboom_package/tv_bigboom1/images/dhl.gif');?>" title="DHL"/>
+								</div>
+							</div>
+                        </div>
+						<div class="row">
+							<div class="col-xs-12 col-sm-6 col-lg-6">
+                                <address class="copyright"><?php echo $this->getCopyright() ?></address>
+                            </div>
+						</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="back-top" class="hidden-xs"><i class="fa fa-angle-up"></i></div>
+</footer>
+<script type="text/javascript">
+    jQuery(document).ready(function($){
+        var $footerEL =  $(".footer-information .info,.footer-information .service,.footer-information .address");
+        $footerEL.append('<span class="add">+</span>');
+        $footerEL.delegate(".add","click",function () {
+            $(this).parent().find(".footer-static-content").slideToggle();
+        });
+    });
+</script>
+<?php echo $this->getLayout()->createBlock('cms/block')->setBlockId('block_social_right')->toHtml() ?>
