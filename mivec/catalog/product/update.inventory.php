@@ -20,6 +20,9 @@ define("__TABLE_PRODUCT_STOCK_ITEM__" , "cataloginventory_stock_item");
 //set `manage_stock`=0 in SKU like 'REP'
 
 define("__ATTR_MANAGE_STOCK__" , 0);
+define("__ATTR_QTY__" , 'qty');
+define("__ATTR_IN_STOCK__" , "is_in_stock");
+
 $sql = "SELECT 
   a.entity_id,
   a.sku,
@@ -29,7 +32,6 @@ FROM
   LEFT JOIN ".__TABLE_PRODUCT_STOCK_ITEM__." b 
     ON (a.entity_id = b.product_id) 
 WHERE a.`sku` LIKE '%REP%' 
-  AND b.`manage_stock` = 1 
 ORDER BY entity_id DESC;";
 
 //echo $sql . "</p>";
@@ -41,7 +43,7 @@ if ($row = $db->fetchAll($sql)) {
                 usleep(5);
             }
         } catch(Exception $e) {
-            echo $e->getMessage();
+            echo $e->getMessage();exit;
         }
     }
 }
@@ -49,7 +51,10 @@ if ($row = $db->fetchAll($sql)) {
 function updateStock($entityId)
 {
     global $db;
-    $sql = "UPDATE " . __TABLE_PRODUCT_STOCK_ITEM__ ." SET `manage_stock`=0 WHERE product_id=$entityId";
+    $sql = "UPDATE " . __TABLE_PRODUCT_STOCK_ITEM__ ." SET `manage_stock`=1
+    ,".__ATTR_IN_STOCK__."=1 
+    ,".__ATTR_QTY__."=1000
+        WHERE product_id=$entityId";
     return $db->query($sql);
 }
 
