@@ -1,5 +1,5 @@
 /**
-* little chubby , responsive
+* little chubby , responsive 
 */
 .mobile-direction{display: none;}
 @media only screen and (max-width: 800px) and (min-width: 680px){
