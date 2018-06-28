@@ -116,8 +116,8 @@
     Options +FollowSymLinks
     RewriteEngine on
 	
-	RewriteCond   %{HTTPS} !=on
-    RewriteRule   ^(.*)  https://%{SERVER_NAME}$1 [L,R]
+	#RewriteCond   %{HTTPS} !=on
+    #RewriteRule   ^(.*)  https://%{SERVER_NAME}$1 [L,R]
 
 ############################################
 ## you can put here your magento root folder

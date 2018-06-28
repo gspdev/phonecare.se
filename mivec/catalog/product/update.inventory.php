@@ -6,18 +6,56 @@ require dirname(__FILE__) . "/config.php";
 //UPDATE cataloginventory_stock_item SET `qty` = 0,`is_in_stock` = 0;
 define("__ATTR_PRODUCT_QTY__" , 0);
 define("__ATTR_PRODUCT_IS_IN_STOCK__" , 0);
-define("__ATTR_PRODUCT_STOCK_ITEM__" , "cataloginventory_stock_item");
 
-$sql = "SELECT a.entity_id,a.sku,b.product_id FROM "
+define("__TABLE_PRODUCT_STOCK_ITEM__" , "cataloginventory_stock_item");
+
+
+/*$sql = "SELECT a.entity_id,a.sku,b.product_id FROM "
     . __TABLE_PRODUCT__." a"
     ." LEFT JOIN ".__ATTR_PRODUCT_STOCK_ITEM__." b ON(a.entity_id=b.product_id)"
-   // ." WHERE b.attribute_id=".__ATTR_PRODUCT_STATUS__
-    //." AND a.entity_id=1920"
-    ." ORDER BY entity_id ASC";
+    ." WHERE b.attribute_id=".__ATTR_PRODUCT_STATUS__
+    ." AND a.entity_id=5346"
+    ." ORDER BY entity_id ASC";*/
 
-echo $sql . "</p>";
+//set `manage_stock`=0 in SKU like 'REP'
 
+define("__ATTR_MANAGE_STOCK__" , 0);
+$sql = "SELECT 
+  a.entity_id,
+  a.sku,
+  b.`manage_stock` 
+FROM
+  ".__TABLE_PRODUCT__." a 
+  LEFT JOIN ".__TABLE_PRODUCT_STOCK_ITEM__." b 
+    ON (a.entity_id = b.product_id) 
+WHERE a.`sku` LIKE '%REP%' 
+  AND b.`manage_stock` = 1 
+ORDER BY entity_id DESC;";
+
+//echo $sql . "</p>";
 if ($row = $db->fetchAll($sql)) {
+    foreach ($row as $rs) {
+        try {
+            if (updateStock($rs["entity_id"])) {
+                echo $rs["sku"] . " update success<br>";
+                usleep(5);
+            }
+        } catch(Exception $e) {
+            echo $e->getMessage();
+        }
+    }
+}
+
+function updateStock($entityId)
+{
+    global $db;
+    $sql = "UPDATE " . __TABLE_PRODUCT_STOCK_ITEM__ ." SET `manage_stock`=0 WHERE product_id=$entityId";
+    return $db->query($sql);
+}
+
+
+
+/*if ($row = $db->fetchAll($sql)) {
     foreach ($row as $rs) {
         try {
             if (update()) {
@@ -28,7 +66,7 @@ if ($row = $db->fetchAll($sql)) {
             print_r($e);
         }
     }
-}
+}*/
 
   
 
