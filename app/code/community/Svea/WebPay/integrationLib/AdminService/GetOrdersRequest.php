@@ -4,20 +4,21 @@ namespace Svea\AdminService;
 require_once SVEA_REQUEST_DIR . '/Includes.php';
 
 /**
- * Handles Admin Webservice GetOrdersRequest
+ * Admin Service DeliverOrdersRequest class
+ * 
  * @author Kristian Grossman-Madsen
  */
 class GetOrdersRequest extends AdminServiceRequest {
     
-    /** @var QueryOrderBuilder $orderBuilder */
+    /** @var GetOrdersBuilder $orderBuilder */
     public $orderBuilder;
 
     /**
-     * @param QueryOrderBuilder $builder
+     * @param getOrdersBuilder $orderBuilder
      */
-    public function __construct($builder) {
+    public function __construct($getOrdersBuilder) {
         $this->action = "GetOrders";
-        $this->orderBuilder = $builder;
+        $this->orderBuilder = $getOrdersBuilder;
     }
 
     /**

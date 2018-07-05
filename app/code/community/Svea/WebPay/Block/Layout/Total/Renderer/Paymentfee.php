@@ -54,7 +54,7 @@ class Svea_WebPay_Block_Layout_Total_Renderer_Paymentfee
         ));
 
         $this->getParentBlock()
-                ->addTotal($total, 'subtotal');
+                ->addTotal($total, 'shipping_incl');
 
         return $this;
     }

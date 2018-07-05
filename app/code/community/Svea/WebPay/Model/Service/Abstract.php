@@ -53,7 +53,10 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
         // have to verify the address key in the address data with the posted
         // one from the ordering process
         $sveaInformation = $payment->getAdditionalInformation();
-
+Mage::log("######################################");
+Mage::log("###   SVEA ADDRESS LOGGING START   ###");
+Mage::log("######################################");
+Mage::log("sveaInformation=" . print_r($sveaInformation,true));
         $order = $payment->getOrder();
         // We don't do getAddress() requests for Finland
         $billingCountryId = $order->getBillingAddress()->getCountryId();
@@ -61,6 +64,7 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
             return;
         }
         if (!empty($sveaInformation) && !empty($sveaInformation['svea_addressSelector'])) {
+Mage::log("svea information is not empty");
             // Get address has been used, and we need to override the billing
             // address that the customer has entered, and possibly also the
             // shipping address
@@ -76,7 +80,9 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
             $address = null;
             // Huh?
             $additionalData = unserialize($quote->getPayment()->getAdditionalData());
+Mage::log("additionalData=" .print_r($additionalData,true));
             if (empty($additionalData) || empty($additionalData['getaddresses_response'])) {
+Mage::log("additional data is empty");
                 // The getAddress button might not have been clicked, issue a
                 // new getAddress call and use the first address if only one is
                 // returned
@@ -92,7 +98,7 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
                         $conf['company'] = (int)$sveaInformation['svea_customerType'] === 1;
                     }
                 }
-
+Mage::log("Making new call to getAddresses with parameters " . $sveaInformation['svea_ssn'] . " , " . $order->getBillingAddress()->getCountryId() . " , " . print_r($conf,true));
                 $result = Mage::helper('svea_webpay')->getAddresses(
                     $sveaInformation['svea_ssn'],
                     $order->getBillingAddress()->getCountryId(),
@@ -108,8 +114,11 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
                         break;
                     }
                 }
+Mage::log("Address=" . print_r($address,true));
             } else {
-                $addressData = $additionalData['getaddresses_response'];
+            
+Mage::log("searching additional data for address");
+	    $addressData = $additionalData['getaddresses_response'];
                 foreach ($addressData->customerIdentity as $identity) {
                     if ($identity->addressSelector == $sveaInformation['svea_addressSelector']) {
                         $address = $identity;
@@ -118,15 +127,25 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
                 }
             }
 
+Mage::log("Address=".print_r($address,true));
             if (null === $address) {
                 throw new Mage_Payment_Exception('Selected civil registry address does not match the database.');
             }
 
-            $allowCustomShippingAddress = Mage::helper('svea_webpay')->allowCustomShippingAddress();
+Mage::log("Address is NOT null");
+            $overwriteStatus = new Varien_Object(array(
+                'overwrite_shipping' => true,
+                'overwrite_billing' => true
+            ));
+            Mage::dispatchEvent('svea_overwrite_address_before', array(
+                'payment' => $payment,
+                'status' => $overwriteStatus
+            ));
 
             // Set the order addresses to the civil registry information
             foreach ($order->getAddressesCollection() as $orderAddress) {
-                if ($orderAddress->getAddressType() === 'shipping' && $allowCustomShippingAddress) {
+                $key = 'overwrite_' . $orderAddress->getAddressType();
+                if ($overwriteStatus->getData($key) !== true) {
                     continue;
                 }
                 if ($sveaInformation['svea_customerType'] == 0) {
@@ -138,6 +157,7 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
                              ->setPostcode($address->zipCode)
                              ->setStreet($address->street);
             }
+Mage::log("orderAddress=" . print_r($orderAddress->getData(),true));
         } else if (in_array($order->getBillingAddress()->getCountryId(), array('SE', 'DK'))) {
             $message = Mage::helper('svea_webpay')->__('Please click the "Get Address" button to fetch your address information and proceed.');
             Mage::throwException($message);
@@ -179,6 +199,7 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
                 $item = $item->setNationalIdNumber($additionalInfo['svea_ssn']);
                 $item = $item->setAddressSelector($additionalInfo['svea_addressSelector']);
             }
+            $svea = $svea->addCustomerDetails($item);
         } else {
             $item = WebPayItem::individualCustomer();
 
@@ -216,17 +237,8 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
                     $item = $item->setInitials($additionalInfo['svea_initials']);
                 }
             }
-
+            $svea = $svea->addCustomerDetails($item);
         }
-        // Set public key on the object if publicKey is set in additionalInfo
-        if (array_key_exists('svea_publicKey', $additionalInfo)) {
-            $publicKey = $additionalInfo['svea_publicKey'];
-            if ($publicKey !== '') {
-                $item = $item->setPublicKey($publicKey);
-                // $item = $item->setAddressSelector('');
-            }
-        }
-        $svea = $svea->addCustomerDetails($item);
         return $svea;
     }
 
@@ -323,12 +335,9 @@ abstract class Svea_WebPay_Model_Service_Abstract extends Svea_WebPay_Model_Abst
         $addresses = array(
             $order->getBillingAddress(),
             $quoteBillingAddress,
+            $order->getShippingAddress(),
+            $quote->getShippingAddress(),
         );
-
-        if (!Mage::helper('svea_webpay')->allowCustomShippingAddress()) {
-            $addresses[] = $order->getShippingAddress();
-            $addresses[] = $quote->getShippingAddress();
-        }
 
         if (Mage::helper('svea_webpay')->createOrderOverwritesAddressForCountry($quoteBillingAddress->getCountryId())) {
             $identity = $response->customerIdentity;

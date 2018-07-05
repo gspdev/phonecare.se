@@ -75,8 +75,7 @@ class FixedDiscount {
      * @return $this
      */
     public function setAmountIncVat($amountIncVatAsFloat) {
-        $this->amount = $amountIncVatAsFloat;           // should set amountIncVat!
-        $this->amountIncVat = $amountIncVatAsFloat;     // fix for above
+        $this->amount = $amountIncVatAsFloat;
         return $this;
     }
     /** @var float $amountIncVat */

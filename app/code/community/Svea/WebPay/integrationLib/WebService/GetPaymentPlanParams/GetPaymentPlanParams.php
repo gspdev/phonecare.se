@@ -59,7 +59,8 @@ class GetPaymentPlanParams {
      */
     public function doRequest() {
         $requestObject = $this->prepareRequest();
-        $request = new WebServiceSoap\SveaDoRequest( $this->conf, \ConfigurationProvider::PAYMENTPLAN_TYPE);
+        $url = $this->conf->getEndPoint(\ConfigurationProvider::PAYMENTPLAN_TYPE);
+        $request = new WebServiceSoap\SveaDoRequest($url);
         $response = $request->GetPaymentPlanParamsEu($requestObject);
 
         $responseObject = new \SveaResponse($response,"");

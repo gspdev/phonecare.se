@@ -4,7 +4,7 @@ namespace Svea\HostedService;
 require_once SVEA_REQUEST_DIR . '/Includes.php';
 
 /**
- * HostedRequest is the parent of hosted webservice (admin) requests.
+ * HostedRequest is the parent of hosted webservice requests.
  * 
  * @author Kristian Grossman-Madsen
  */
@@ -31,7 +31,7 @@ abstract class HostedRequest {
      * are present. If not, throws an exception. Actual validation is delegated 
      * to subclass validateAttributes() implementations.
      *
-     * @throws \Svea\ValidationException
+     * @throws ValidationException
      */
     public function validateRequest() {
 

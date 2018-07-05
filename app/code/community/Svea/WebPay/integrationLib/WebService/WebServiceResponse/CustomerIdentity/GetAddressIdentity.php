@@ -10,7 +10,7 @@ require_once 'CustomerIdentityResponse.php';
  */
 class GetAddressIdentity extends CustomerIdentityResponse {
 
-    /** @var string $addressSelector */
+    /** @var string $nationalIdNumber */
     public $addressSelector;
     /** @var string $firstName  only set in case of a createorder request */
     public $firstName;

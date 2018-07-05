@@ -41,7 +41,8 @@ class CloseOrder extends HandleOrder {
      */
     public function doRequest() {
         $requestObject = $this->prepareRequest();
-        $request = new WebServiceSoap\SveaDoRequest($this->orderBuilder->conf, $this->orderBuilder->orderType);
+        $url = $this->orderBuilder->conf->getEndPoint($this->orderBuilder->orderType);
+        $request = new WebServiceSoap\SveaDoRequest($url);
         $response = $request->CloseOrderEu($requestObject);
         $responseObject = new \SveaResponse($response,"");
         return $responseObject->response;

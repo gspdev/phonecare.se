@@ -238,7 +238,7 @@ class Svea_WebPay_HostedController extends Mage_Core_Controller_Front_Action
 
             if ($methodInstance instanceof Svea_WebPay_Model_Hosted_Direct) {
                 $payment->setPreparedMessage('Svea - Payment Successful.');
-                $payment->registerCaptureNotification($order->getBaseGrandTotal());
+                $payment->registerCaptureNotification($order->getGrandTotal());
             } else {
                 // This config value should come from the payment object data ideally
                 // since it could have been changed between requests
@@ -251,7 +251,7 @@ class Svea_WebPay_HostedController extends Mage_Core_Controller_Front_Action
                     // Leave the transaction open for captures/refunds/etc
                     $payment->setPreparedMessage('Svea - Payment Authorized.');
                     $payment->setIsTransactionClosed(0)
-                        ->registerAuthorizationNotification($order->getBaseGrandTotal());
+                        ->registerAuthorizationNotification($order->getGrandTotal());
                 }
             }
 
@@ -271,9 +271,8 @@ class Svea_WebPay_HostedController extends Mage_Core_Controller_Front_Action
         } catch (Exception $e) {
             Mage::logException($e);
             $write->rollback();
-            $this->getResponse()
-                ->setHttpResponseCode(500);
             throw $e;
         }
     }
+
 }

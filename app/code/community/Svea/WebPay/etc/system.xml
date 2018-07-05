@@ -11,15 +11,6 @@
                     <show_in_website>1</show_in_website>
                     <show_in_store>1</show_in_store>
                     <fields>
-                        <version translate="label">
-                            <label>SVEA WebPay version</label>
-                            <frontend_type>select</frontend_type>
-                            <frontend_model>Svea_WebPay_Block_Adminhtml_Version</frontend_model>
-                            <sort_order>0</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>1</show_in_website>
-                            <show_in_store>1</show_in_store>
-                        </version>
 
                         <display_ssn_selector_with_payment_method translate="label comment">
                             <label>Display 'Get Address' button with payment method</label>
@@ -86,16 +77,6 @@
                             <show_in_website>1</show_in_website>
                             <show_in_store>1</show_in_store>
                         </check_for_new_updates>
-
-                        <import_customer_addresses translate="label">
-                            <label>Import Customer Addresses</label>
-                            <frontend_type>import</frontend_type>
-                            <backend_model>svea_webpay/system_config_backend_customer_import</backend_model>
-                            <sort_order>7</sort_order>
-                            <show_in_default>1</show_in_default>
-                            <show_in_website>0</show_in_website>
-                            <show_in_store>0</show_in_store>
-                        </import_customer_addresses>
 
                     </fields>
                 </svea_general>

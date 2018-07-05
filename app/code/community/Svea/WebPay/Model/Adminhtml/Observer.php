@@ -87,17 +87,17 @@ class Svea_WebPay_Model_Adminhtml_Observer extends Mage_Core_Model_Observer
                 ->version;
 
             if (version_compare($currentVersion, $latestVersion, '<')) {
-                $title = 'New version of Svea WebPay available!';
-                $description = 'There is a new version ' . $latestVersion . ' of Svea WebPay available for download.';
-                $date = date('Y-m-d H:i:s');
-                Mage::getModel('adminnotification/inbox')->getResource()
-                    ->parse(new Mage_AdminNotification_Model_Inbox, array(array(
-                        'severity'    => Mage_AdminNotification_Model_Inbox::SEVERITY_NOTICE,
-                        'date_added'  => $date,
-                        'title'       => $title,
-                        'description' => $description,
-                        'url'         => $htmlUrl,
-                    )));
+                // $title = 'New version of Svea WebPay available!';
+                // $description = 'There is a new version ' . $latestVersion . ' of Svea WebPay available for download.';
+                // $date = date('Y-m-d H:i:s');
+                // Mage::getModel('adminnotification/inbox')->getResource()
+                //     ->parse(new Mage_AdminNotification_Model_Inbox, array(array(
+                //         'severity'    => Mage_AdminNotification_Model_Inbox::SEVERITY_NOTICE,
+                //         'date_added'  => $date,
+                //         'title'       => $title,
+                //         'description' => $description,
+                //         'url'         => $htmlUrl,
+                //     )));
             }
         } catch (Exception $e) {
             $this->_saveReleasesToCache(json_encode(array()));

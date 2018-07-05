@@ -7,35 +7,21 @@ class SoapClient {
 
     /**
      * Constructor, sets up soap server and SoapClient
-     * @param ConfigurationProvider $config
-     * @param string $orderType
+     * @param string $endpoint
      */
-    public function __construct($config, $orderType ) {
-        $this->client = $this->setSoapClient( $config, $orderType );
+    public function __construct($endpoint) {
+        $this->client = $this->setSoapClient( $endpoint );
     }
 
     /**
      * When used from PHP, the SveaWebPay Administration Service requires some configuration.
-     * getSoapClient() takes the config and eturns a SoapClient with a working set
+     * getSoapClient() takes the endpoint url and returns a SoapClient with a working set
      * of options, bypassing the server wsdl.
      *
-     * @param ConfigurationProvider $config
-     * @param string $orderType
+     * @param string $endpoint
      * @return SoapClient
      */
-    public function setSoapClient( $config, $orderType ) {
-        
-        $libraryProperties = \Svea\Helper::getSveaLibraryProperties();
-        $libraryName = $libraryProperties['library_name'];
-        $libraryVersion =  $libraryProperties['library_version'];
-        
-        $integrationProperties = \Svea\Helper::getSveaIntegrationProperties($config);
-        $integrationPlatform = $integrationProperties['integration_platform'];
-        $integrationCompany = $integrationProperties['integration_company'];
-        $integrationVersion = $integrationProperties['integration_version'];        
-              
-        $endpoint = $config->getEndPoint( $orderType );    
-        
+    public function setSoapClient( $endpoint ) {
         $client = new \SoapClient(
             null,
             array(
@@ -45,17 +31,10 @@ class SoapClient {
                 'exceptions'=> 1,
                 'connection_timeout' => 60,
                 'trace' => 1,
-                'soap_version' => SOAP_1_1,
-                'stream_context' => stream_context_create(array('http' => array(
-                    'header' => 'X-Svea-Library-Name: ' . $libraryName . "\n" . 
-                                'X-Svea-Library-Version: ' . $libraryVersion . "\n" .              
-                                'X-Svea-Integration-Platform: ' . $integrationPlatform . "\n" .              
-                                'X-Svea-Integration-Company: ' . $integrationCompany . "\n" .              
-                                'X-Svea-Integration-Version: ' . $integrationVersion               
-                )))
+                'soap_version' => SOAP_1_1
             )
         );
-                
+
         return $client;
     }
 
@@ -76,11 +55,11 @@ class SoapClient {
         // wrap the request
         $wrappedRequest = new \SoapVar( $request, SOAP_ENC_OBJECT, "-", "--", "request", "http://tempuri.org/");
 
-        // do soapcall            
+        // do soapcall
         $response = $this->client->__soapCall( $action, array( $wrappedRequest ),
             array( "soapaction" => 'http://tempuri.org/IAdminService/'.$action )
         );
- 
+
         return $response;
     }
 }

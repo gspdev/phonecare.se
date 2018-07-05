@@ -3,10 +3,10 @@
 
 /**
  * PaymentMethod is a container for the various payment method constant strings
- *
+ * 
  */
 abstract class PaymentMethod {
-
+    
     const INVOICE = 'INVOICE';
     const PAYMENTPLAN = 'PAYMENTPLAN';
     //DIRECT
@@ -28,7 +28,6 @@ abstract class PaymentMethod {
     const TAPIOLA_FI = 'DBTAPIOLAFI';
     //PaymentMethodType::CARD
     const KORTCERT = 'KORTCERT';
-    const SVEACARDPAY = 'SVEACARDPAY';
     const SKRILL = 'SKRILL';
     const KORTWN = 'KORTWN';
     //PREPAID

@@ -14,12 +14,11 @@ class HostedXmlBuilder {
     private $XMLWriter;
     private $isCompany = "FALSE";   // set to true by serializeCustomer if needed.
 
-    private function setBaseXML( $config ){
+    private function setBaseXML(){
         $this->XMLWriter = new \XMLWriter();
         $this->XMLWriter->openMemory();
         $this->XMLWriter->setIndent(true);
-        $this->XMLWriter->startDocument("1.0", "UTF-8");                                    
-        $this->XMLWriter->writeComment( \Svea\Helper::getLibraryAndPlatformPropertiesAsJson( $config ) );
+        $this->XMLWriter->startDocument("1.0", "UTF-8");
     }    
 
     /**
@@ -44,7 +43,7 @@ class HostedXmlBuilder {
      * This method expect UTF-8 input
      */
     public function getPaymentXML($request, $order) {
-        $this->setBaseXML( $order->conf );
+        $this->setBaseXML();
         $this->XMLWriter->startElement("payment");
         
         //paymentmethod -- optional
@@ -56,11 +55,11 @@ class HostedXmlBuilder {
         // currency
         $this->XMLWriter->writeElement("currency", $request['currency']);
         // amount
-        $this->XMLWriter->writeElement("amount", \Svea\Helper::bround($request['amount']));             
+        $this->XMLWriter->writeElement("amount", round($request['amount']));             
 
         // vat -- optional
         if ($request['totalVat'] != null) {
-            $this->XMLWriter->writeElement("vat", \Svea\Helper::bround($request['totalVat']));          
+            $this->XMLWriter->writeElement("vat", round($request['totalVat']));          
         }
         // customerrefno -- optional
         $this->XMLWriter->writeElement("customerrefno", $request['clientOrderNumber']);
@@ -116,7 +115,7 @@ class HostedXmlBuilder {
      * This method expect UTF-8 input
      */
     public function getPreparePaymentXML($request, $order) {
-        $this->setBaseXML( $order->conf );
+        $this->setBaseXML();
         $this->XMLWriter->startElement("payment");
 
         if (isset($request['paymentMethod'])) {
@@ -124,10 +123,10 @@ class HostedXmlBuilder {
         }
         $this->XMLWriter->writeElement("lang", $request['langCode']);                   // required in preparepayment 
         $this->XMLWriter->writeElement("currency", $request['currency']);
-        $this->XMLWriter->writeElement("amount", \Svea\Helper::bround($request['amount']));             
+        $this->XMLWriter->writeElement("amount", round($request['amount']));             
 
         if ($request['totalVat'] != null) {
-            $this->XMLWriter->writeElement("vat", \Svea\Helper::bround($request['totalVat']));          
+            $this->XMLWriter->writeElement("vat", round($request['totalVat']));          
         }
         $this->XMLWriter->writeElement("customerrefno", $request['clientOrderNumber']);
         $this->XMLWriter->writeElement("returnurl", $request['returnUrl']);
@@ -268,13 +267,13 @@ class HostedXmlBuilder {
         }
 
         if (!empty($orderRow->amount) && $orderRow->amount != null) {
-            $this->XMLWriter->writeElement("amount", \Svea\Helper::bround($orderRow->amount));
+            $this->XMLWriter->writeElement("amount", round($orderRow->amount));
         } else {
               $this->XMLWriter->writeElement("amount", "0");
         }
 
         if (!empty($orderRow->vat) && $orderRow->vat != null) {
-            $this->XMLWriter->writeElement("vat", \Svea\Helper::bround($orderRow->vat));
+            $this->XMLWriter->writeElement("vat", round($orderRow->vat));
         } else {
             $this->XMLWriter->writeElement("vat", "0");
         }
