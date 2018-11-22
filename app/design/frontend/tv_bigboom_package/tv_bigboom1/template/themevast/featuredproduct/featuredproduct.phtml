@@ -242,7 +242,7 @@ $_featureImgUrl = Mage::getBaseUrl();
         });
     </script>
 </div>
-<?php /*
+<?php ?>
 <?php
 		$reviews = Mage::getModel('review/review')->getResourceCollection();
 
@@ -288,11 +288,13 @@ $_featureImgUrl = Mage::getBaseUrl();
 							</div>
 				<?php endif; ?>
                 </div>
+                <?php /*?>
                 <div class="testimonial-text">
                     <p class="p1">
-                        <span class="s1"><?php echo $this->escapeHtml($_vote->getDetail()); ?></span>
+                        <span class="s1"><?php //echo $this->escapeHtml($_vote->getDetail()); ?></span>
                     </p>
                 </div>
+                <?php */?>
                 <div class="testimonial-cite">
                    <!--<img src="<?php //echo $_featureImgUrl . '\skin\frontend\tv_bigboom_package\tv_bigboom1\images\spara.png' ?>" width="70" height="70" alt="<?php //echo 'Name'?>">-->
                     <div class="cite-text has-cite-image">
@@ -320,4 +322,4 @@ $_featureImgUrl = Mage::getBaseUrl();
         })(".review_box");
     });
 </script>
-*/?>
+<??>
